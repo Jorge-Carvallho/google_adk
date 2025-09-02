@@ -3,7 +3,7 @@ name: Teste Google ADK Agent
 on:
   push:
     branches:
-      - "**"   # Dispara em qualquer branch
+      - "**"   # Dispara em qualquer branch#
   pull_request:   # Dispara em qualquer PR
 
 jobs:
