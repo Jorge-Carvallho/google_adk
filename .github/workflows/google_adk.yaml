@@ -33,4 +33,4 @@ jobs:
       - name: Run Google ADK Agent
         run: |
           source venv/bin/activate
-          python my_toll_agent/agent.py
+          python my_tool_agent/agent.py
