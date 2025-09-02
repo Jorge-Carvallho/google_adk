@@ -1,0 +1,9 @@
+.venv/
+
+__pycahce__/
+*.pyc
+*.pyo
+
+*.log
+
+my_tool_agent/.env

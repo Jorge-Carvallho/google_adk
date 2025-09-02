@@ -1,0 +1,48 @@
+name: Google ADK CI
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout do código
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Configura Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Configura cache para dependências
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      # Instala dependências
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install google-adk  # garante que o ADK esteja instalado
+
+      # Configura variável de ambiente (chave da API Gemini)
+      - name: Set environment
+        run: echo "GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}" >> $GITHUB_ENV
+
+      # Roda agente (ou testes)
+      - name: Run ADK Agent
+        run: |
+          adk run my_tool_agent --once
