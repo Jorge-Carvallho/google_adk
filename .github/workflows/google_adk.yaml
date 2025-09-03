@@ -35,3 +35,21 @@ jobs:
         run: |
           source venv/bin/activate
           python my_tool_agent/agent.py
+
+      # 5️⃣ Teste de vulnerabilidades no código (Bandit)
+      - name: Run Bandit (code security check)
+        run: |
+          source venv/bin/activate
+          bandit -r my_tool_agent -ll
+
+      # 6️⃣ Teste de vulnerabilidades nas dependências (Safety)
+      - name: Run Safety (dependencies check)
+        run: |
+          source venv/bin/activate
+          safety check --full-report
+
+      # 7️⃣ Auditoria de pacotes (pip-audit)
+      - name: Run pip-audit
+        run: |
+          source venv/bin/activate
+          pip-audit
