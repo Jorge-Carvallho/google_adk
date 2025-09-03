@@ -3,12 +3,12 @@ name: Teste Google ADK Agent
 on:
   push:
     branches:
-      - "**"   # Dispara em qualquer branch#
+      - "**"   # Dispara em qualquer branch
   pull_request:   # Dispara em qualquer PR
 
 jobs:
   test-adk:
-    runs-on: ubuntu-latest   # Mais rápido e recomendado que Windows
+    runs-on: ubuntu-latest
 
     steps:
       # 1️⃣ Baixa o código do repositório
@@ -19,7 +19,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11"   # versão mais estável
+          python-version: "3.11"
 
       # 3️⃣ Instala dependências
       - name: Install dependencies
@@ -28,9 +28,28 @@ jobs:
           source venv/bin/activate
           python -m pip install --upgrade pip
           pip install google-adk
+          pip install bandit safety pip-audit
 
       # 4️⃣ Executa o agente
       - name: Run Google ADK Agent
         run: |
           source venv/bin/activate
           python my_tool_agent/agent.py
+
+      # 5️⃣ Teste de vulnerabilidades no código (Bandit)
+      - name: Run Bandit (code security check)
+        run: |
+          source venv/bin/activate
+          bandit -r my_tool_agent -ll
+
+      # 6️⃣ Teste de vulnerabilidades nas dependências (Safety)
+      - name: Run Safety (dependencies check)
+        run: |
+          source venv/bin/activate
+          safety check --full-report
+
+      # 7️⃣ Auditoria de pacotes (pip-audit)
+      - name: Run pip-audit
+        run: |
+          source venv/bin/activate
+          pip-audit
